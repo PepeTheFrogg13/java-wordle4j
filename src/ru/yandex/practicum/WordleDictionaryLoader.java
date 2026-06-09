@@ -28,7 +28,7 @@ public class WordleDictionaryLoader {
         File file = new File(dictionayPath);
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            while (bufferedReader.ready()){
+            while (bufferedReader.ready()) {
                 String word = bufferedReader.readLine();
                 words.add(word);
             }
@@ -37,7 +37,7 @@ public class WordleDictionaryLoader {
             throw new RuntimeException(e);
         }
 
-        return new WordleDictionary(log,words);
+        return new WordleDictionary(log, words);
 
     }
 }
