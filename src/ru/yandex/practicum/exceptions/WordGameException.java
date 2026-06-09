@@ -18,5 +18,4 @@ public abstract class WordGameException extends Exception {
     }
 
 
-
 }

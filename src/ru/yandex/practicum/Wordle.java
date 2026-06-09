@@ -31,36 +31,36 @@ public class Wordle {
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(LOG_FILE);
              Writer writer = new PrintWriter(fileOutputStream);
-             PrintWriter log = new PrintWriter(writer,true)) {
-             try {
-                 WordleDictionaryLoader wordleDictionaryLoader = new WordleDictionaryLoader(log, WORDS_FILE);
-                 WordleDictionary wordleDictionary = wordleDictionaryLoader.loadDictionary();
-                 WordleGame wordleGame = new WordleGame(log, wordleDictionary);
-                 Wordle wordle = new Wordle(log);
-                 wordle.playGeme(wordleGame);
-             } catch (Exception e){
-                 e.printStackTrace(log);
-             }
+             PrintWriter log = new PrintWriter(writer, true)) {
+            try {
+                WordleDictionaryLoader wordleDictionaryLoader = new WordleDictionaryLoader(log, WORDS_FILE);
+                WordleDictionary wordleDictionary = wordleDictionaryLoader.loadDictionary();
+                WordleGame wordleGame = new WordleGame(log, wordleDictionary);
+                Wordle wordle = new Wordle(log);
+                wordle.playGeme(wordleGame);
+            } catch (Exception e) {
+                e.printStackTrace(log);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void playGeme(WordleGame wordleGame){
+    public void playGeme(WordleGame wordleGame) {
         log.println("Начало игры");
         Scanner scanner = new Scanner(System.in);
         System.out.println("У вас 6 попыток, для получения подсказки нажмите enter без ввода слова");
-        while (!wordleGame.isEnded()){
+        while (!wordleGame.isEnded()) {
             String word = scanner.nextLine();
             try {
-                if (word.isBlank()){
+                if (word.isBlank()) {
                     word = wordleGame.getTip();
                     log.println("Пользователь взял подсказку " + word);
                     System.out.println(word);
                 }
                 log.println("Проверка слова " + word);
                 wordleGame.guessWord(word);
-            } catch (WordGameException e){
+            } catch (WordGameException e) {
                 log.println("Ошибка валидации слова: " + e.getMessage() + " " + e.getWord());
                 e.printStackTrace(log);
             }
