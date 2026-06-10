@@ -64,13 +64,26 @@ public class WordleGame {
         rightLetters = new char[5];
     }
 
-
     public String getAnswer() {
         return answer;
     }
 
     public boolean isEnded() {
         return steps <= 0;
+    }
+
+    public HashMap<Character, Integer> getAnswerLetters() {
+        HashMap<Character, Integer> result = new HashMap<>();
+        for (Character c : answer.toCharArray()) {
+            if (result.containsKey(c)) {
+                int count = result.get(c);
+                count++;
+                result.put(c, count);
+            } else {
+                result.put(c, 1);
+            }
+        }
+        return result;
     }
 
     public void checkWord(String word) throws WordGameException {
@@ -84,7 +97,7 @@ public class WordleGame {
     }
 
     public void guessWord(String word) throws WordGameException {
-        String normalizedWord = dictionary.normalizeWord(word);
+        String normalizedWord = WordleDictionary.normalizeWord(word);
         checkWord(normalizedWord);
         System.out.println(wordsCompare(normalizedWord));
 
@@ -94,18 +107,45 @@ public class WordleGame {
 
         StringBuilder stringBuilder = new StringBuilder();
 
+        HashMap<Character, Integer> answerLettersCount = getAnswerLetters();
+
+        //Здесь будем хранить наши символы - подсказки
+        char[] letters = new char[5];
+
+        /*
+            Обработаем сначала все точные метчи с ответом, чтобы исключить повторяшки перед уже правильными буквами
+            Например ответ кошка, слово кашка должен выдать +-+++, так как в слове "кошка" одна буква а, а в "кашка" их 2
+         */
         for (int i = 0; i < word.length(); i++) {
             if (answer.charAt(i) == word.charAt(i)) {
+                int count = answerLettersCount.get(word.charAt(i));
+                count--;
+                answerLettersCount.put(word.charAt(i), count);
                 existLetters.add(word.charAt(i));
                 rightLetters[i] = word.charAt(i);
-                stringBuilder.append('+');
-            } else if (answer.indexOf(word.charAt(i)) > -1) {
+                letters[i] = '+';
+            }
+        }
+
+        for (int i = 0; i < word.length(); i++) {
+            if (letters[i] == '+') continue;
+            if (answer.indexOf(word.charAt(i)) > -1) {
                 existLetters.add(word.charAt(i));
-                stringBuilder.append('^');
+                int count = answerLettersCount.get(word.charAt(i));
+                if (count == 0) {
+                    letters[i] = '-';
+                } else {
+                    count--;
+                    answerLettersCount.put(word.charAt(i), count);
+                    letters[i] = '^';
+                }
             } else {
                 wrongLetters.add(word.charAt(i));
-                stringBuilder.append('-');
+                letters[i] = '-';
             }
+        }
+        for (char c : letters) {
+            stringBuilder.append(c);
         }
 
         if (word.equals(answer)) {
@@ -157,7 +197,12 @@ public class WordleGame {
             if (notFits) continue;
             wordsForTip.add(word);
         }
-        return wordsForTip.get(random.nextInt(wordsForTip.size()));
+        if (wordsForTip.isEmpty()) {
+            return "Нет идей для подсказки, введите слово вручную!";
+        } else {
+            return wordsForTip.get(random.nextInt(wordsForTip.size()));
+        }
+
     }
 
 }

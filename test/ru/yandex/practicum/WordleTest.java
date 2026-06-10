@@ -1,6 +1,5 @@
 package ru.yandex.practicum;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.exceptions.WordGameException;
@@ -35,7 +34,7 @@ class WordleTest {
             try {
                 wordleDictionaryLoader = new WordleDictionaryLoader(log, WORDS_FILE);
                 wordleDictionary = wordleDictionaryLoader.loadDictionary();
-                wordleGame = new WordleGame(log, wordleDictionary,"шишка");
+                wordleGame = new WordleGame(log, wordleDictionary, "шишка");
             } catch (Exception e) {
                 e.printStackTrace(log);
             }
@@ -80,22 +79,32 @@ class WordleTest {
 
         String checkWord = "шашка";
 
-        String checkLetters = "+^+++ попыток осталось 5/6";
+        String checkLetters = "+-+++ попыток осталось 5/6";
 
-        assertEquals(checkLetters,wordleGame.wordsCompare(checkWord));
+        assertEquals(checkLetters, wordleGame.wordsCompare(checkWord));
 
     }
 
     @Test
-    public void testTip(){
+    public void testTip() {
         //Для слова "шишка" после ввода слова "шашка", подсказка должна быть 100% верной
-        String checkWord = "шашка";
+        String checkWord = "шишка";
 
         wordleGame.wordsCompare(checkWord);
 
         String answer = wordleGame.getAnswer();
 
-        assertEquals(answer,wordleGame.getTip());
+        assertEquals(answer, wordleGame.getTip());
+
+    }
+
+    @Test
+    public void testShShShShSh() throws WordGameException {
+        String checkWord = "шшшшш";
+
+        String checkLetters = "+-+-- попыток осталось 5/6";
+
+        assertEquals(checkLetters, wordleGame.wordsCompare(checkWord));
 
     }
 

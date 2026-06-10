@@ -30,7 +30,7 @@ public class WordleDictionaryLoader {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while (bufferedReader.ready()) {
                 String word = bufferedReader.readLine();
-                words.add(word);
+                words.add(WordleDictionary.normalizeWord(word));
             }
             log.println("Словарь загружен");
         } catch (IOException e) {

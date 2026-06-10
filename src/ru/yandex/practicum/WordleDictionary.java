@@ -26,7 +26,7 @@ public class WordleDictionary {
     }
 
     public boolean wordExists(String word) {
-        return words.contains(word);
+        return words.contains(normalizeWord(word));
     }
 
     public String getRandomAnswer() {
@@ -40,7 +40,8 @@ public class WordleDictionary {
         return filtredWords.get(random.nextInt(filtredWords.size()));
     }
 
-    public String normalizeWord(String word) {
+    //Сделал метод статичным, чтобы его можно было использовать в других классах без создания словаря
+    public static String normalizeWord(String word) {
         return word.toLowerCase().replace('ё', 'е');
     }
 
