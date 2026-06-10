@@ -1,6 +1,9 @@
 package ru.yandex.practicum;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /*
 этот класс содержит в себе список слов List<String>
@@ -10,5 +13,36 @@ import java.util.List;
 public class WordleDictionary {
 
     private List<String> words;
+
+    private PrintWriter log;
+
+    public WordleDictionary(PrintWriter log, List<String> words) {
+        this.log = log;
+        this.words = words;
+    }
+
+    public List<String> getWords() {
+        return words;
+    }
+
+    public boolean wordExists(String word) {
+        return words.contains(normalizeWord(word));
+    }
+
+    public String getRandomAnswer() {
+        Random random = new Random();
+        List<String> filtredWords = new ArrayList<>();
+        for (String s : words) {
+            if (s.length() == 5) {
+                filtredWords.add(s);
+            }
+        }
+        return filtredWords.get(random.nextInt(filtredWords.size()));
+    }
+
+    //Сделал метод статичным, чтобы его можно было использовать в других классах без создания словаря
+    public static String normalizeWord(String word) {
+        return word.toLowerCase().replace('ё', 'е');
+    }
 
 }
